@@ -18,6 +18,10 @@ class App extends React.Component {
     }
 
     componentDidMount() {
+        this.getLists();
+    }
+
+    getLists() {
         fetch("http://localhost:8000/api/books")
             .then((res) => res.json())
             .then((result) => {
@@ -52,15 +56,30 @@ class App extends React.Component {
             .catch(console.log);
     };
 
-    updateList = (id) => {
+    updateList = (event, id) => {
         this.state.singledata._id = id;
+
+        const target = event.target;
+        const value = target.value;
+        const name = target.name;
+        let item = this.state.alldata.filter((book) => book._id == id)[0];
+        item[name] = value;
+        console.log(event, item, name, value);
+
+        let books = this.state.alldata;
+
+        books.forEach((book) => {
+            if (book._id == id) {
+                book[name] = value;
+            }
+        });
 
         fetch("http://localhost:8000/api/book", {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(this.state.singledata),
+            body: JSON.stringify(item),
         })
             .then(() => {
                 this.setState({
@@ -97,23 +116,28 @@ class App extends React.Component {
             .catch(console.log);
     };
 
-    handleChange = (event) => {
+    handleChange = (event, id) => {
         console.log(event.target.value);
         let title = this.state.singledata.title;
         let author = this.state.singledata.author;
 
-        if (event.target.name == "title") {
-            title = event.target.value;
-        } else {
-            author = event.target.value;
-        }
+        const target = event.target;
+        const value = target.value;
+        const name = target.name;
+        let item = this.state.alldata.filter((book) => book._id == id)[0];
+        item[name] = value;
+
+        let books = this.state.alldata;
+        books.forEach((book) => {
+            if (book._id == id) {
+                book[name] = value;
+            }
+        });
+
+        console.log(event, item, name, value);
 
         this.setState({
-            singledata: {
-                id: this.state.alldata.length + 1,
-                title: title,
-                author: author,
-            },
+            alldata: books,
         });
     };
 

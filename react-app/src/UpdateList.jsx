@@ -22,7 +22,9 @@ function UpdateList(props) {
                         placeholder="Title"
                         name="title"
                         value={props.singledata.title}
-                        onChange={props.handleChange}
+                        onChange={(event) => {
+                            props.handleChange(event, props._id);
+                        }}
                         className="d-block my-3"
                     />
                     <input
@@ -30,7 +32,9 @@ function UpdateList(props) {
                         placeholder="Author"
                         name="author"
                         value={props.singledata.author}
-                        onChange={props.handleChange}
+                        onChange={(event) => {
+                            props.handleChange(event, props._id);
+                        }}
                         className="d-block my-3"
                     />
                 </Modal.Body>
@@ -40,9 +44,9 @@ function UpdateList(props) {
                     </Button>
                     <Button
                         variant="primary"
-                        onClick={() => {
+                        onClick={(event) => {
                             handleClose();
-                            props.updateList(props._id);
+                            props.updateList(event, props._id);
                         }}
                     >
                         Update
